@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\calandrinon\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\calandrinon\\.nuget\\packages"
+    ]
+  }
+}
