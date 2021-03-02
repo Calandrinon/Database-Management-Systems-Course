@@ -30,20 +30,47 @@ namespace Lab_1
         private void InitializeComponent()
         {
             this.usersListView = new System.Windows.Forms.ListView();
+            this.userIdColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.usernameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.passwordColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.transactionsListView = new System.Windows.Forms.ListView();
             this.displayUsersButton = new System.Windows.Forms.Button();
+            this.registrationDateColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.transactionIdColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.userIdFKColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.recordIdColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.transactionDatetimeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // usersListView
             // 
+            this.usersListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.userIdColumn,
+            this.usernameColumn,
+            this.passwordColumn,
+            this.registrationDateColumn});
+            this.usersListView.GridLines = true;
             this.usersListView.HideSelection = false;
-            this.usersListView.Location = new System.Drawing.Point(35, 41);
+            this.usersListView.Location = new System.Drawing.Point(38, 41);
             this.usersListView.Name = "usersListView";
             this.usersListView.Size = new System.Drawing.Size(279, 167);
             this.usersListView.TabIndex = 0;
             this.usersListView.UseCompatibleStateImageBehavior = false;
+            this.usersListView.View = System.Windows.Forms.View.Details;
+            // 
+            // userIdColumn
+            // 
+            this.userIdColumn.Text = "User ID";
+            // 
+            // usernameColumn
+            // 
+            this.usernameColumn.Text = "Username";
+            // 
+            // passwordColumn
+            // 
+            this.passwordColumn.Text = "Password";
             // 
             // label1
             // 
@@ -65,12 +92,20 @@ namespace Lab_1
             // 
             // transactionsListView
             // 
+            this.transactionsListView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.transactionsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.transactionIdColumn,
+            this.userIdFKColumn,
+            this.recordIdColumn,
+            this.transactionDatetimeColumn});
+            this.transactionsListView.GridLines = true;
             this.transactionsListView.HideSelection = false;
             this.transactionsListView.Location = new System.Drawing.Point(476, 41);
             this.transactionsListView.Name = "transactionsListView";
             this.transactionsListView.Size = new System.Drawing.Size(279, 167);
             this.transactionsListView.TabIndex = 2;
             this.transactionsListView.UseCompatibleStateImageBehavior = false;
+            this.transactionsListView.View = System.Windows.Forms.View.Details;
             // 
             // displayUsersButton
             // 
@@ -81,6 +116,26 @@ namespace Lab_1
             this.displayUsersButton.Text = "Display users";
             this.displayUsersButton.UseVisualStyleBackColor = true;
             this.displayUsersButton.Click += new System.EventHandler(this.displayUsersButton_Click);
+            // 
+            // registrationDateColumn
+            // 
+            this.registrationDateColumn.Text = "Registration date";
+            // 
+            // transactionIdColumn
+            // 
+            this.transactionIdColumn.Text = "Transaction ID";
+            // 
+            // userIdFKColumn
+            // 
+            this.userIdFKColumn.Text = "User ID";
+            // 
+            // recordIdColumn
+            // 
+            this.recordIdColumn.Text = "Record ID";
+            // 
+            // transactionDatetimeColumn
+            // 
+            this.transactionDatetimeColumn.Text = "Time";
             // 
             // Form1
             // 
@@ -106,6 +161,14 @@ namespace Lab_1
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListView transactionsListView;
         private System.Windows.Forms.Button displayUsersButton;
+        private System.Windows.Forms.ColumnHeader userIdColumn;
+        private System.Windows.Forms.ColumnHeader usernameColumn;
+        private System.Windows.Forms.ColumnHeader passwordColumn;
+        private System.Windows.Forms.ColumnHeader registrationDateColumn;
+        private System.Windows.Forms.ColumnHeader transactionIdColumn;
+        private System.Windows.Forms.ColumnHeader userIdFKColumn;
+        private System.Windows.Forms.ColumnHeader recordIdColumn;
+        private System.Windows.Forms.ColumnHeader transactionDatetimeColumn;
     }
 }
 

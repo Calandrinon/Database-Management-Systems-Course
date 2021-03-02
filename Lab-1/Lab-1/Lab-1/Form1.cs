@@ -20,6 +20,9 @@ namespace Lab_1
         private void displayUsersButton_Click(object sender, EventArgs e)
         {
             Console.WriteLine("hello world");
+            String[] row = {"some id", "some other stuff", "some more", "less"};
+            ListViewItem listViewItem = new ListViewItem(row);
+            usersListView.Items.Add(listViewItem);
         }
     }
 }
