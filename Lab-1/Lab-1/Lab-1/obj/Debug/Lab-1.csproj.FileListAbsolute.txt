@@ -8,3 +8,6 @@ C:\Users\calandrinon\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\La
 C:\Users\calandrinon\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab-1.exe
 C:\Users\calandrinon\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab-1.pdb
 C:\Users\calandrinon\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab-1.csprojAssemblyReference.cache
+C:\Users\calandrinon\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\bin\Debug\System.Data.SqlClient.dll
+C:\Users\calandrinon\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\bin\Debug\System.Data.SqlClient.xml
+C:\Users\calandrinon\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab-1.csproj.CopyComplete
