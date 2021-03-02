@@ -459,11 +459,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\calandrinon\\Documents\\Database-Management-Systems-Course\\Lab-1\\WindowsFormsApp1\\WindowsFormsApp1\\WindowsFormsApp1.csproj",
+      "projectUniqueName": "C:\\Users\\calandrinon\\Documents\\Database-Management-Systems-Course\\Lab-1\\WinForms-ADOdotNet-Sample\\WindowsFormsApp1\\WindowsFormsApp1\\WindowsFormsApp1.csproj",
       "projectName": "WindowsFormsApp1",
-      "projectPath": "C:\\Users\\calandrinon\\Documents\\Database-Management-Systems-Course\\Lab-1\\WindowsFormsApp1\\WindowsFormsApp1\\WindowsFormsApp1.csproj",
+      "projectPath": "C:\\Users\\calandrinon\\Documents\\Database-Management-Systems-Course\\Lab-1\\WinForms-ADOdotNet-Sample\\WindowsFormsApp1\\WindowsFormsApp1\\WindowsFormsApp1.csproj",
       "packagesPath": "C:\\Users\\calandrinon\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\calandrinon\\Documents\\Database-Management-Systems-Course\\Lab-1\\WindowsFormsApp1\\WindowsFormsApp1\\obj\\",
+      "outputPath": "C:\\Users\\calandrinon\\Documents\\Database-Management-Systems-Course\\Lab-1\\WinForms-ADOdotNet-Sample\\WindowsFormsApp1\\WindowsFormsApp1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\calandrinon\\AppData\\Roaming\\NuGet\\NuGet.Config",
