@@ -47,5 +47,41 @@ namespace Lab_1
 
             databaseConnection.Close();
         }
+
+        private void usersListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (usersListView.SelectedItems.Count > 0)
+            {
+                databaseConnection.Open();
+                transactionsListView.Items.Clear();
+                ListViewItem user = usersListView.SelectedItems[0];
+                int userId = Int32.Parse(user.Text);
+                Console.WriteLine(userId);
+
+                String queryCode = "SELECT * FROM UserTransaction WHERE UserId=@UID";
+                SqlCommand queryCommand = new SqlCommand(queryCode, databaseConnection);
+                SqlParameter userIdParameter = new SqlParameter();
+                userIdParameter.ParameterName = "@UID";
+                userIdParameter.Value = userId;
+                queryCommand.Parameters.Add(userIdParameter);
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(queryCommand);
+
+                DataSet dataSet = new DataSet();
+                dataAdapter.Fill(dataSet, "UserTransaction");
+                DataTable transactionTable = dataSet.Tables["UserTransaction"];
+
+                foreach (DataRow dataRow in transactionTable.Rows)
+                {
+                    String[] rowStringArray = {dataRow["TransactionId"].ToString(),
+                        dataRow["UserId"].ToString(),
+                        dataRow["RecordId"].ToString(),
+                        dataRow["TransactionDateTime"].ToString()};
+                    ListViewItem listViewItem = new ListViewItem(rowStringArray);
+                    transactionsListView.Items.Add(listViewItem);
+                }
+
+                databaseConnection.Close();
+            }
+        }
     }
 }

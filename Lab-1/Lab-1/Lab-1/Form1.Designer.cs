@@ -33,15 +33,15 @@ namespace Lab_1
             this.userIdColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.usernameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.passwordColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.registrationDateColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.transactionsListView = new System.Windows.Forms.ListView();
-            this.displayUsersButton = new System.Windows.Forms.Button();
-            this.registrationDateColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.transactionIdColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.userIdFKColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.recordIdColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.transactionDatetimeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.displayUsersButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // usersListView
@@ -59,6 +59,7 @@ namespace Lab_1
             this.usersListView.TabIndex = 0;
             this.usersListView.UseCompatibleStateImageBehavior = false;
             this.usersListView.View = System.Windows.Forms.View.Details;
+            this.usersListView.SelectedIndexChanged += new System.EventHandler(this.usersListView_SelectedIndexChanged);
             // 
             // userIdColumn
             // 
@@ -71,6 +72,10 @@ namespace Lab_1
             // passwordColumn
             // 
             this.passwordColumn.Text = "Password";
+            // 
+            // registrationDateColumn
+            // 
+            this.registrationDateColumn.Text = "Registration date";
             // 
             // label1
             // 
@@ -107,20 +112,6 @@ namespace Lab_1
             this.transactionsListView.UseCompatibleStateImageBehavior = false;
             this.transactionsListView.View = System.Windows.Forms.View.Details;
             // 
-            // displayUsersButton
-            // 
-            this.displayUsersButton.Location = new System.Drawing.Point(38, 228);
-            this.displayUsersButton.Name = "displayUsersButton";
-            this.displayUsersButton.Size = new System.Drawing.Size(103, 28);
-            this.displayUsersButton.TabIndex = 4;
-            this.displayUsersButton.Text = "Display users";
-            this.displayUsersButton.UseVisualStyleBackColor = true;
-            this.displayUsersButton.Click += new System.EventHandler(this.displayUsersButton_Click);
-            // 
-            // registrationDateColumn
-            // 
-            this.registrationDateColumn.Text = "Registration date";
-            // 
             // transactionIdColumn
             // 
             this.transactionIdColumn.Text = "Transaction ID";
@@ -136,6 +127,16 @@ namespace Lab_1
             // transactionDatetimeColumn
             // 
             this.transactionDatetimeColumn.Text = "Time";
+            // 
+            // displayUsersButton
+            // 
+            this.displayUsersButton.Location = new System.Drawing.Point(38, 228);
+            this.displayUsersButton.Name = "displayUsersButton";
+            this.displayUsersButton.Size = new System.Drawing.Size(103, 28);
+            this.displayUsersButton.TabIndex = 4;
+            this.displayUsersButton.Text = "Display users";
+            this.displayUsersButton.UseVisualStyleBackColor = true;
+            this.displayUsersButton.Click += new System.EventHandler(this.displayUsersButton_Click);
             // 
             // Form1
             // 
