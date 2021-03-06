@@ -84,6 +84,33 @@ namespace Lab_1
             }
         }
 
+        
+        private void updateTransactionListView(SqlParameter userIdParameter)
+        {
+            if (this.databaseConnection.State == ConnectionState.Closed)
+                this.databaseConnection.Open();
+
+            String queryCode = "SELECT * FROM UserTransaction WHERE UserId=@UID";
+            SqlCommand queryCommand = new SqlCommand(queryCode, databaseConnection);
+            queryCommand.Parameters.Add(userIdParameter);
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(queryCommand);
+
+            DataSet dataSet = new DataSet();
+            dataAdapter.Fill(dataSet, "UserTransaction");
+            DataTable transactionTable = dataSet.Tables["UserTransaction"];
+
+            foreach (DataRow dataRow in transactionTable.Rows)
+            {
+                String[] rowStringArray = {dataRow["TransactionId"].ToString(),
+                    dataRow["UserId"].ToString(),
+                    dataRow["RecordId"].ToString(),
+                    dataRow["TransactionDateTime"].ToString()};
+                ListViewItem listViewItem = new ListViewItem(rowStringArray);
+                transactionsListView.Items.Add(listViewItem);
+            }
+        }
+
+
         private void addButton_Click(object sender, EventArgs e)
         {
             databaseConnection.Open();  
@@ -123,25 +150,7 @@ namespace Lab_1
             insertCommand.Parameters.Clear();
             transactionsListView.Items.Clear();
 
-            String queryCode = "SELECT * FROM UserTransaction WHERE UserId=@UID";
-            SqlCommand queryCommand = new SqlCommand(queryCode, databaseConnection);
-            queryCommand.Parameters.Add(userIdParameter);
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(queryCommand);
-
-            DataSet dataSet = new DataSet();
-            dataAdapter.Fill(dataSet, "UserTransaction");
-            DataTable transactionTable = dataSet.Tables["UserTransaction"];
-
-            foreach (DataRow dataRow in transactionTable.Rows)
-            {
-                String[] rowStringArray = {dataRow["TransactionId"].ToString(),
-                    dataRow["UserId"].ToString(),
-                    dataRow["RecordId"].ToString(),
-                    dataRow["TransactionDateTime"].ToString()};
-                ListViewItem listViewItem = new ListViewItem(rowStringArray);
-                transactionsListView.Items.Add(listViewItem);
-            }
-            
+            this.updateTransactionListView(userIdParameter);
             databaseConnection.Close();  
         }
 
@@ -150,6 +159,7 @@ namespace Lab_1
             databaseConnection.Open();  
             SqlParameter userIdParameter = new SqlParameter();
             userIdParameter.ParameterName = "@UID";
+            userIdParameter.Value = Int32.Parse(usersListView.SelectedItems[0].Text);
             SqlParameter timeParameter = new SqlParameter();
             timeParameter.ParameterName = "@TIME";
             timeParameter.Value = timeTextBox.Text;
@@ -176,26 +186,7 @@ namespace Lab_1
             updateCommand.Parameters.Clear();
             transactionsListView.Items.Clear();
 
-            userIdParameter.Value = Int32.Parse(usersListView.SelectedItems[0].Text);
-            String queryCode = "SELECT * FROM UserTransaction WHERE UserId=@UID";
-            SqlCommand queryCommand = new SqlCommand(queryCode, databaseConnection);
-            queryCommand.Parameters.Add(userIdParameter);
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(queryCommand);
-
-            DataSet dataSet = new DataSet();
-            dataAdapter.Fill(dataSet, "UserTransaction");
-            DataTable transactionTable = dataSet.Tables["UserTransaction"];
-
-            foreach (DataRow dataRow in transactionTable.Rows)
-            {
-                String[] rowStringArray = {dataRow["TransactionId"].ToString(),
-                    dataRow["UserId"].ToString(),
-                    dataRow["RecordId"].ToString(),
-                    dataRow["TransactionDateTime"].ToString()};
-                ListViewItem listViewItem = new ListViewItem(rowStringArray);
-                transactionsListView.Items.Add(listViewItem);
-            }
-            
+            this.updateTransactionListView(userIdParameter);
             databaseConnection.Close();  
         }
 
@@ -204,6 +195,7 @@ namespace Lab_1
             databaseConnection.Open();  
             SqlParameter userIdParameter = new SqlParameter();
             userIdParameter.ParameterName = "@UID";
+            userIdParameter.Value = Int32.Parse(usersListView.SelectedItems[0].Text);
             SqlParameter transactionIdParameter = new SqlParameter();
             transactionIdParameter.ParameterName = "@TID";
 
@@ -226,26 +218,7 @@ namespace Lab_1
             deleteCommand.Parameters.Clear();
             transactionsListView.Items.Clear();
 
-            userIdParameter.Value = Int32.Parse(usersListView.SelectedItems[0].Text);
-            String queryCode = "SELECT * FROM UserTransaction WHERE UserId=@UID";
-            SqlCommand queryCommand = new SqlCommand(queryCode, databaseConnection);
-            queryCommand.Parameters.Add(userIdParameter);
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(queryCommand);
-
-            DataSet dataSet = new DataSet();
-            dataAdapter.Fill(dataSet, "UserTransaction");
-            DataTable transactionTable = dataSet.Tables["UserTransaction"];
-
-            foreach (DataRow dataRow in transactionTable.Rows)
-            {
-                String[] rowStringArray = {dataRow["TransactionId"].ToString(),
-                    dataRow["UserId"].ToString(),
-                    dataRow["RecordId"].ToString(),
-                    dataRow["TransactionDateTime"].ToString()};
-                ListViewItem listViewItem = new ListViewItem(rowStringArray);
-                transactionsListView.Items.Add(listViewItem);
-            }
-            
+            this.updateTransactionListView(userIdParameter);
             databaseConnection.Close();  
         }
     }
