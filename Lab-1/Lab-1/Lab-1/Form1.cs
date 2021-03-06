@@ -201,7 +201,52 @@ namespace Lab_1
 
         private void removeButton_Click(object sender, EventArgs e)
         {
+            databaseConnection.Open();  
+            SqlParameter userIdParameter = new SqlParameter();
+            userIdParameter.ParameterName = "@UID";
+            SqlParameter transactionIdParameter = new SqlParameter();
+            transactionIdParameter.ParameterName = "@TID";
 
+            if (transactionsListView.SelectedItems.Count == 0)
+            {
+                databaseConnection.Close();  
+                return;
+            }
+            ListViewItem transaction = transactionsListView.SelectedItems[0];
+            int transactionId = Int32.Parse(transaction.Text);
+            Console.WriteLine("transactionIdSelected: {0}", transactionId);
+
+            SqlCommand deleteCommand = new SqlCommand();
+            transactionIdParameter.Value = transactionId;
+            deleteCommand.CommandText = "DELETE FROM UserTransaction WHERE TransactionId=@TID";
+            deleteCommand.CommandType = CommandType.Text;
+            deleteCommand.Connection = databaseConnection;
+            deleteCommand.Parameters.Add(transactionIdParameter);
+            deleteCommand.ExecuteNonQuery();
+            deleteCommand.Parameters.Clear();
+            transactionsListView.Items.Clear();
+
+            userIdParameter.Value = Int32.Parse(usersListView.SelectedItems[0].Text);
+            String queryCode = "SELECT * FROM UserTransaction WHERE UserId=@UID";
+            SqlCommand queryCommand = new SqlCommand(queryCode, databaseConnection);
+            queryCommand.Parameters.Add(userIdParameter);
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(queryCommand);
+
+            DataSet dataSet = new DataSet();
+            dataAdapter.Fill(dataSet, "UserTransaction");
+            DataTable transactionTable = dataSet.Tables["UserTransaction"];
+
+            foreach (DataRow dataRow in transactionTable.Rows)
+            {
+                String[] rowStringArray = {dataRow["TransactionId"].ToString(),
+                    dataRow["UserId"].ToString(),
+                    dataRow["RecordId"].ToString(),
+                    dataRow["TransactionDateTime"].ToString()};
+                ListViewItem listViewItem = new ListViewItem(rowStringArray);
+                transactionsListView.Items.Add(listViewItem);
+            }
+            
+            databaseConnection.Close();  
         }
     }
 }
