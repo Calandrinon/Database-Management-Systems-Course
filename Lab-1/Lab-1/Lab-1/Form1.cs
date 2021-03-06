@@ -83,5 +83,76 @@ namespace Lab_1
                 databaseConnection.Close();
             }
         }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            databaseConnection.Open();  
+            SqlParameter userIdParameter = new SqlParameter();
+            userIdParameter.ParameterName = "@UID";
+            userIdParameter.Value = userTextBox.Text;
+            SqlParameter recordIdParameter = new SqlParameter();
+            recordIdParameter.ParameterName = "@RID";
+            recordIdParameter.Value = recordTextBox.Text;
+            SqlParameter timeParameter = new SqlParameter();
+            timeParameter.ParameterName = "@TIME";
+            timeParameter.Value = timeTextBox.Text;
+
+            SqlCommand userRecordLinkInsertion = new SqlCommand();
+            userRecordLinkInsertion.CommandText = "INSERT INTO Users_Records(UserId, RecordId) VALUES (@UID, @RID)";
+            userRecordLinkInsertion.CommandType = CommandType.Text;
+            userRecordLinkInsertion.Connection = databaseConnection;
+            userRecordLinkInsertion.Parameters.Add(userIdParameter);
+            userRecordLinkInsertion.Parameters.Add(recordIdParameter);
+            try {    
+                userRecordLinkInsertion.ExecuteNonQuery();
+            } catch (Exception exception) {
+                Console.Write("Adding a new link between user {0} and record {1} was not needed: ", userIdParameter.Value, recordIdParameter.Value);
+                Console.Write(exception.Message);
+            }
+
+            userRecordLinkInsertion.Parameters.Clear();
+
+            SqlCommand insertCommand = new SqlCommand();
+            insertCommand.CommandText = "INSERT INTO UserTransaction(UserId, RecordId, TransactionDateTime) VALUES (@UID, @RID, @TIME)";
+            insertCommand.CommandType = CommandType.Text;
+            insertCommand.Connection = databaseConnection;
+            insertCommand.Parameters.Add(userIdParameter);
+            insertCommand.Parameters.Add(recordIdParameter);
+            insertCommand.Parameters.Add(timeParameter);
+            insertCommand.ExecuteNonQuery();
+            insertCommand.Parameters.Clear();
+            transactionsListView.Items.Clear();
+
+            String queryCode = "SELECT * FROM UserTransaction WHERE UserId=@UID";
+            SqlCommand queryCommand = new SqlCommand(queryCode, databaseConnection);
+            queryCommand.Parameters.Add(userIdParameter);
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(queryCommand);
+
+            DataSet dataSet = new DataSet();
+            dataAdapter.Fill(dataSet, "UserTransaction");
+            DataTable transactionTable = dataSet.Tables["UserTransaction"];
+
+            foreach (DataRow dataRow in transactionTable.Rows)
+            {
+                String[] rowStringArray = {dataRow["TransactionId"].ToString(),
+                    dataRow["UserId"].ToString(),
+                    dataRow["RecordId"].ToString(),
+                    dataRow["TransactionDateTime"].ToString()};
+                ListViewItem listViewItem = new ListViewItem(rowStringArray);
+                transactionsListView.Items.Add(listViewItem);
+            }
+            
+            databaseConnection.Close();  
+        }
+
+        private void updateButton_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void removeButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
