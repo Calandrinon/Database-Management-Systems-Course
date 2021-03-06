@@ -162,7 +162,7 @@ namespace Lab_1
             userIdParameter.Value = Int32.Parse(usersListView.SelectedItems[0].Text);
             SqlParameter timeParameter = new SqlParameter();
             timeParameter.ParameterName = "@TIME";
-            timeParameter.Value = timeTextBox.Text;
+            timeParameter.Value = timeTextBox2.Text;
             SqlParameter transactionIdParameter = new SqlParameter();
             transactionIdParameter.ParameterName = "@TID";
 
