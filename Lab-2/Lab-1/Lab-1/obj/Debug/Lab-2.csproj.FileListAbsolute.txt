@@ -18,3 +18,4 @@ C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-2\Lab-1\Lab-1\ob
 C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-2\Lab-1\Lab-1\obj\Debug\Lab-2.csproj.CopyComplete
 C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-2\Lab-1\Lab-1\obj\Debug\Lab-1.exe
 C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-2\Lab-1\Lab-1\obj\Debug\Lab-1.pdb
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-2\Lab-1\Lab-1\obj\Debug\Lab-2.csprojAssemblyReference.cache

@@ -42,6 +42,9 @@ namespace Lab_1
             daUser = new SqlDataAdapter(selectClientUser, databaseConnection);
             daTransaction = new SqlDataAdapter(selectSecondTable, databaseConnection);
             SqlCommandBuilder cb = new SqlCommandBuilder(daTransaction);
+
+            label1.Text = tableClientUser + "s";
+            label2.Text = tableSecond + "s";
         }
 
 
