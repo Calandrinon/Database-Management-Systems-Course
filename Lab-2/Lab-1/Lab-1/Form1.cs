@@ -44,6 +44,7 @@ namespace Lab_1
             SqlCommandBuilder cb = new SqlCommandBuilder(daTransaction);
         }
 
+
         private void Form1_Load(object sender, EventArgs e)
         {
             daUser.Fill(dataSet, tableClientUser);
