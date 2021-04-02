@@ -11,3 +11,16 @@ C:\Users\calandrinon\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\La
 C:\Users\calandrinon\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\bin\Debug\System.Data.SqlClient.dll
 C:\Users\calandrinon\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\bin\Debug\System.Data.SqlClient.xml
 C:\Users\calandrinon\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab-1.csproj.CopyComplete
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\bin\Debug\Lab-1.exe.config
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\bin\Debug\Lab-1.exe
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\bin\Debug\Lab-1.pdb
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\bin\Debug\System.Data.SqlClient.dll
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\bin\Debug\System.Data.SqlClient.xml
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab-1.csprojAssemblyReference.cache
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab_1.Form1.resources
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab_1.Properties.Resources.resources
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab-1.csproj.GenerateResource.cache
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab-1.csproj.CoreCompileInputs.cache
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab-1.csproj.CopyComplete
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab-1.exe
+C:\Users\georg\Documents\Database-Management-Systems-Course\Lab-1\Lab-1\Lab-1\obj\Debug\Lab-1.pdb

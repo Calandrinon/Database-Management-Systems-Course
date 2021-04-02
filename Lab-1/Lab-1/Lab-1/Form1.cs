@@ -14,212 +14,52 @@ namespace Lab_1
     public partial class Form1 : Form
     {
         private SqlConnection databaseConnection;
+        private DataSet dataSet { get; set; }
+        private SqlDataAdapter daUser { get; set; }
+        private SqlDataAdapter daTransaction { get; set; }
+        private BindingSource bsUser { get; set; }
+        private BindingSource bsTransaction { get; set; }
+        private String connectionString;
         public Form1()
         {
             InitializeComponent();
-            String connectionString = "Data Source=DESKTOP-KPQA7E3\\SQLEXPRESS; Initial Catalog=OnlineMusicStore; Integrated Security=true";
-            this.databaseConnection = new SqlConnection(connectionString);
+            this.connectionString = "Data Source=DESKTOP-0I4E1BF\\SQLEXPRESS; Initial Catalog=OnlineMusicStore; Integrated Security=true";
+            databaseConnection = new SqlConnection(this.connectionString);
+            dataSet = new DataSet();
+            daUser = new SqlDataAdapter("select * from ClientUser", databaseConnection);
+            daTransaction = new SqlDataAdapter("select * from UserTransaction", databaseConnection);
+            SqlCommandBuilder cb = new SqlCommandBuilder(daTransaction);
         }
 
-        private void displayUsersButton_Click(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            usersListView.Items.Clear();
+            daUser.Fill(dataSet, "ClientUser");
+            daTransaction.Fill(dataSet, "UserTransaction");
 
-            databaseConnection.Open();
-            DataSet dataSet = new DataSet();
-            String query = "SELECT * FROM ClientUser";
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(query, databaseConnection);
-            dataAdapter.Fill(dataSet, "ClientUser");
-            DataTable dataTable = dataSet.Tables["ClientUser"];
+            DataRelation dr = new DataRelation("FK_ClientUser_UserTransaction", dataSet.Tables["ClientUser"].Columns["UserId"],
+                dataSet.Tables["UserTransaction"].Columns["UserId"]);
+            dataSet.Relations.Add(dr);
 
-            foreach (DataRow dataRow in dataTable.Rows)
-            {                        
-                String[] rowStringArray = {dataRow["UserId"].ToString(),
-                    dataRow["Username"].ToString(),
-                    dataRow["EncryptedPassword"].ToString(),
-                    dataRow["RegistrationDate"].ToString()};
-                ListViewItem listViewItem = new ListViewItem(rowStringArray);
+            bsUser = new BindingSource();
+            bsUser.DataSource = dataSet;
+            bsUser.DataMember = "ClientUser";
 
-                usersListView.Items.Add(listViewItem);
+            bsTransaction = new BindingSource();
+            bsTransaction.DataSource = bsUser;
+            bsTransaction.DataMember = "FK_ClientUser_UserTransaction";
 
-                Console.WriteLine(dataRow["UserId"] + " " + dataRow["Username"].ToString() + " " + dataRow["EncryptedPassword"] + " " + dataRow["RegistrationDate"]);
-            }
+            usersDataGridView.AutoGenerateColumns = true;
+            transactionsDataGridView.AutoGenerateColumns = true;
+            usersDataGridView.DataSource = bsUser;
+            transactionsDataGridView.DataSource = bsTransaction;
 
-            databaseConnection.Close();
-        }
-
-        private void usersListView_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (usersListView.SelectedItems.Count > 0)
-            {
-                databaseConnection.Open();
-                transactionsListView.Items.Clear();
-                ListViewItem user = usersListView.SelectedItems[0];
-                int userId = Int32.Parse(user.Text);
-                Console.WriteLine(userId);
-
-                String queryCode = "SELECT * FROM UserTransaction WHERE UserId=@UID";
-                SqlCommand queryCommand = new SqlCommand(queryCode, databaseConnection);
-                SqlParameter userIdParameter = new SqlParameter();
-                userIdParameter.ParameterName = "@UID";
-                userIdParameter.Value = userId;
-                queryCommand.Parameters.Add(userIdParameter);
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(queryCommand);
-
-                DataSet dataSet = new DataSet();
-                dataAdapter.Fill(dataSet, "UserTransaction");
-                DataTable transactionTable = dataSet.Tables["UserTransaction"];
-
-                foreach (DataRow dataRow in transactionTable.Rows)
-                {
-                    String[] rowStringArray = {dataRow["TransactionId"].ToString(),
-                        dataRow["UserId"].ToString(),
-                        dataRow["RecordId"].ToString(),
-                        dataRow["TransactionDateTime"].ToString()};
-                    ListViewItem listViewItem = new ListViewItem(rowStringArray);
-                    transactionsListView.Items.Add(listViewItem);
-                }
-
-                databaseConnection.Close();
-            }
-        }
-
-        
-        private void updateTransactionListView(SqlParameter userIdParameter)
-        {
-            if (this.databaseConnection.State == ConnectionState.Closed)
-                this.databaseConnection.Open();
-
-            String queryCode = "SELECT * FROM UserTransaction WHERE UserId=@UID";
-            SqlCommand queryCommand = new SqlCommand(queryCode, databaseConnection);
-            queryCommand.Parameters.Add(userIdParameter);
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(queryCommand);
-
-            DataSet dataSet = new DataSet();
-            dataAdapter.Fill(dataSet, "UserTransaction");
-            DataTable transactionTable = dataSet.Tables["UserTransaction"];
-
-            foreach (DataRow dataRow in transactionTable.Rows)
-            {
-                String[] rowStringArray = {dataRow["TransactionId"].ToString(),
-                    dataRow["UserId"].ToString(),
-                    dataRow["RecordId"].ToString(),
-                    dataRow["TransactionDateTime"].ToString()};
-                ListViewItem listViewItem = new ListViewItem(rowStringArray);
-                transactionsListView.Items.Add(listViewItem);
-            }
-        }
-
-
-        private void addButton_Click(object sender, EventArgs e)
-        {
-            databaseConnection.Open();  
-            SqlParameter userIdParameter = new SqlParameter();
-            userIdParameter.ParameterName = "@UID";
-            userIdParameter.Value = userTextBox.Text;
-            SqlParameter recordIdParameter = new SqlParameter();
-            recordIdParameter.ParameterName = "@RID";
-            recordIdParameter.Value = recordTextBox.Text;
-            SqlParameter timeParameter = new SqlParameter();
-            timeParameter.ParameterName = "@TIME";
-            timeParameter.Value = timeTextBox.Text;
-
-            SqlCommand userRecordLinkInsertion = new SqlCommand();
-            userRecordLinkInsertion.CommandText = "INSERT INTO Users_Records(UserId, RecordId) VALUES (@UID, @RID)";
-            userRecordLinkInsertion.CommandType = CommandType.Text;
-            userRecordLinkInsertion.Connection = databaseConnection;
-            userRecordLinkInsertion.Parameters.Add(userIdParameter);
-            userRecordLinkInsertion.Parameters.Add(recordIdParameter);
-            try {    
-                userRecordLinkInsertion.ExecuteNonQuery();
-            } catch (Exception exception) {
-                Console.Write("Adding a new link between user {0} and record {1} was not needed: ", userIdParameter.Value, recordIdParameter.Value);
-                Console.Write(exception.Message);
-            }
-
-            userRecordLinkInsertion.Parameters.Clear();
-
-            SqlCommand insertCommand = new SqlCommand();
-            insertCommand.CommandText = "INSERT INTO UserTransaction(UserId, RecordId, TransactionDateTime) VALUES (@UID, @RID, @TIME)";
-            insertCommand.CommandType = CommandType.Text;
-            insertCommand.Connection = databaseConnection;
-            insertCommand.Parameters.Add(userIdParameter);
-            insertCommand.Parameters.Add(recordIdParameter);
-            insertCommand.Parameters.Add(timeParameter);
-            insertCommand.ExecuteNonQuery();
-            insertCommand.Parameters.Clear();
-            transactionsListView.Items.Clear();
-
-            this.updateTransactionListView(userIdParameter);
-            databaseConnection.Close();  
+            Console.WriteLine("Form load complete.");
         }
 
         private void updateButton_Click(object sender, EventArgs e)
-        { 
-            databaseConnection.Open();  
-            SqlParameter userIdParameter = new SqlParameter();
-            userIdParameter.ParameterName = "@UID";
-            userIdParameter.Value = Int32.Parse(usersListView.SelectedItems[0].Text);
-            SqlParameter timeParameter = new SqlParameter();
-            timeParameter.ParameterName = "@TIME";
-            timeParameter.Value = timeTextBox2.Text;
-            SqlParameter transactionIdParameter = new SqlParameter();
-            transactionIdParameter.ParameterName = "@TID";
-
-            if (transactionsListView.SelectedItems.Count == 0)
-            {
-                databaseConnection.Close();  
-                return;
-            }
-            ListViewItem transaction = transactionsListView.SelectedItems[0];
-            int transactionId = Int32.Parse(transaction.Text);
-            Console.WriteLine("transactionIdSelected: {0}", transactionId);
-
-            SqlCommand updateCommand = new SqlCommand();
-            transactionIdParameter.Value = transactionId;
-            updateCommand.CommandText = "UPDATE UserTransaction SET TransactionDateTime=@TIME WHERE TransactionId=@TID";
-            updateCommand.CommandType = CommandType.Text;
-            updateCommand.Connection = databaseConnection;
-            updateCommand.Parameters.Add(timeParameter);
-            updateCommand.Parameters.Add(transactionIdParameter);
-            updateCommand.ExecuteNonQuery();
-            updateCommand.Parameters.Clear();
-            transactionsListView.Items.Clear();
-
-            this.updateTransactionListView(userIdParameter);
-            databaseConnection.Close();  
-        }
-
-        private void removeButton_Click(object sender, EventArgs e)
         {
-            databaseConnection.Open();  
-            SqlParameter userIdParameter = new SqlParameter();
-            userIdParameter.ParameterName = "@UID";
-            userIdParameter.Value = Int32.Parse(usersListView.SelectedItems[0].Text);
-            SqlParameter transactionIdParameter = new SqlParameter();
-            transactionIdParameter.ParameterName = "@TID";
-
-            if (transactionsListView.SelectedItems.Count == 0)
-            {
-                databaseConnection.Close();  
-                return;
-            }
-            ListViewItem transaction = transactionsListView.SelectedItems[0];
-            int transactionId = Int32.Parse(transaction.Text);
-            Console.WriteLine("transactionIdSelected: {0}", transactionId);
-
-            SqlCommand deleteCommand = new SqlCommand();
-            transactionIdParameter.Value = transactionId;
-            deleteCommand.CommandText = "DELETE FROM UserTransaction WHERE TransactionId=@TID";
-            deleteCommand.CommandType = CommandType.Text;
-            deleteCommand.Connection = databaseConnection;
-            deleteCommand.Parameters.Add(transactionIdParameter);
-            deleteCommand.ExecuteNonQuery();
-            deleteCommand.Parameters.Clear();
-            transactionsListView.Items.Clear();
-
-            this.updateTransactionListView(userIdParameter);
-            databaseConnection.Close();  
+            daTransaction.Update(dataSet, "UserTransaction");
         }
+
     }
 }
