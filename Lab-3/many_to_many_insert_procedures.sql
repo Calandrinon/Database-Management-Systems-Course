@@ -8,26 +8,66 @@ AS
     INSERT INTO Album (Name, ReleaseDate, AlbumArtLink) VALUES (@AlbumName, @ReleaseDate, @AlbumArtLink)
 GO
 
-SELECT * FROM Artist;
+CREATE OR ALTER PROCEDURE addArtistAlbumAssociation(@ArtistName VARCHAR(50), @AlbumName VARCHAR(50))
+AS
+    DECLARE @ArtistId INT = (SELECT ArtistId FROM Artist WHERE Name = @ArtistName)
+    DECLARE @AlbumId INT = (SELECT AlbumId FROM Album WHERE Name = @AlbumName)
+
+    IF @ArtistId IS NULL
+    BEGIN
+        PRINT '@ArtistId is null...'
+        EXEC addArtist @ArtistName, NULL
+        SET @ArtistId = (SELECT ArtistId FROM Artist WHERE Name = @ArtistName)
+    END
+
+    IF @AlbumId IS NULL
+    BEGIN
+        PRINT '@AlbumId is null...'
+        DECLARE @CurrentDate DATE = CAST(GETDATE() as DATE)
+        EXEC addAlbum @AlbumName, @CurrentDate, ''
+        SET @AlbumId = (SELECT AlbumId FROM Album WHERE Name = @AlbumName)
+    END
+
+    IF (SELECT COUNT(*) FROM Artists_Albums WHERE ArtistId = @ArtistId AND AlbumId = @AlbumId) > 0
+    BEGIN
+        RAISERROR ('An association between the given artist and album already exists.', 2, 1)
+        RETURN
+    END
+
+    INSERT INTO Artists_Albums (ArtistId, AlbumId) VALUES (@ArtistId, @AlbumId)
+GO
+
+CREATE OR ALTER PROCEDURE addAssociationInsideATransaction(@ArtistName VARCHAR(50), @AlbumName VARCHAR(50))
+AS
+    BEGIN TRANSACTION
+
+    BEGIN TRY
+        EXEC addArtistAlbumAssociation @ArtistName, @AlbumName
+        COMMIT TRANSACTION
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION
+        RETURN
+    END CATCH
+GO
+
+CREATE OR ALTER PROCEDURE failedScenario
+AS
+    EXEC addAssociationInsideATransaction 'Pink Floyd', 'Dark Side Of The Moon'
+GO
+
+CREATE OR ALTER PROCEDURE successfulScenario
+AS
+    EXEC addAssociationInsideATransaction 'Pink Floyd', 'The Final Cut'
+GO
 
 /**
  DON'T USE IDs AS PARAMETERS!
- Get the last Artist/Album and obtain the ID of each of them,
- then try to add a many-to-many association in Artists_Albums
-
-CREATE OR ALTER PROCEDURE addAlbumByArtist(@ArtistId INT, @AlbumId INT)
-AS
-    IF (SELECT COUNT(*) FROM Artist WHERE ArtistId = @ArtistId) = 0
-    BEGIN
-        RAISERROR('There is no artist with the given ID!', 19, 1)
-    END
-
-    IF (SELECT COUNT(*) FROM Album WHERE AlbumId = @AlbumId) = 0
-    BEGIN
-        RAISERROR('There is no album with the given ID!', 19, 1)
-    END
-
-    IF (SELECT COUNT(*) FROM Artists_Albums WHERE A)
-
-GO
 **/
+
+EXEC failedScenario
+EXEC successfulScenario
+SELECT * FROM Artists_Albums;
+SELECT * FROM Album;
+DELETE FROM Album WHERE AlbumId = 20
+DELETE FROM Artists_Albums WHERE AlbumId = 20
