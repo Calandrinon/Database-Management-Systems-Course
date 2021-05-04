@@ -3,6 +3,11 @@
     If one insert fails, all the operations performed by the procedure must be rolled back.
 **/
 
+CREATE TABLE LogTable
+    (LogId INT PRIMARY KEY IDENTITY (1,1),
+     OperationType VARCHAR(64),
+     OperationTable VARCHAR(64))
+
 CREATE OR ALTER FUNCTION validateArtistNameAndEstablishmentYear(@ArtistName VARCHAR(50), @EstablishmentYear SMALLINT)
 RETURNS INT
 AS
@@ -33,20 +38,24 @@ CREATE OR ALTER PROCEDURE addArtist(@ArtistName VARCHAR(50), @EstablishmentYear 
 AS
     IF (dbo.validateArtistNameAndEstablishmentYear(@ArtistName, @EstablishmentYear) <> 1)
     BEGIN
+        INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT VALIDATION ERROR', 'Artist')
         RAISERROR ('The artist name and establishment year cannot be null.', 6, 1)
         RETURN
     END
     INSERT INTO Artist (Name, EstablishmentYear) VALUES (@ArtistName, @EstablishmentYear)
+    INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT', 'Artist')
 GO
 
 CREATE OR ALTER PROCEDURE addAlbum(@AlbumName VARCHAR(50), @ReleaseDate DATE, @AlbumArtLink VARCHAR(200))
 AS
     IF (dbo.validateAlbumParameters(@AlbumName, @ReleaseDate) <> 1)
     BEGIN
+        INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT VALIDATION ERROR', 'Album')
         RAISERROR ('The album name and release date cannot be null.', 6, 1)
         RETURN
     END
     INSERT INTO Album (Name, ReleaseDate, AlbumArtLink) VALUES (@AlbumName, @ReleaseDate, @AlbumArtLink)
+    INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT', 'Album')
 GO
 
 CREATE OR ALTER PROCEDURE addArtistAlbumAssociation(@ArtistName VARCHAR(50), @AlbumName VARCHAR(50))
@@ -71,11 +80,13 @@ AS
 
     IF (SELECT COUNT(*) FROM Artists_Albums WHERE ArtistId = @ArtistId AND AlbumId = @AlbumId) > 0
     BEGIN
+        INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT VALIDATION ERROR', 'Albums_Artists')
         RAISERROR ('An association between the given artist and album already exists.', 2, 1)
         RETURN
     END
 
     INSERT INTO Artists_Albums (ArtistId, AlbumId) VALUES (@ArtistId, @AlbumId)
+    INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT', 'Albums_Artists')
 GO
 
 CREATE OR ALTER PROCEDURE addAssociationInsideATransaction(@ArtistName VARCHAR(50), @AlbumName VARCHAR(50))
