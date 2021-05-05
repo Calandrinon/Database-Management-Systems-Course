@@ -1,0 +1,3 @@
+BEGIN TRANSACTION
+INSERT INTO Album (Name, ReleaseDate, AlbumArtLink) VALUES ('testalbum', '2021-01-03', '')
+COMMIT TRANSACTION
