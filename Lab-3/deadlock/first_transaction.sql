@@ -3,3 +3,5 @@ UPDATE Album SET ReleaseDate = '1972-01-01' WHERE AlbumId = 17
 WAITFOR DELAY '00:00:10'
 UPDATE Artist SET Name = 'Punk Fluid' WHERE ArtistId = 1
 COMMIT TRANSACTION
+
+SELECT * FROM Artist;

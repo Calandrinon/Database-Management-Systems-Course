@@ -3,10 +3,12 @@
     If one insert fails, all the operations performed by the procedure must be rolled back.
 **/
 
+DROP TABLE LogTable;
 CREATE TABLE LogTable
     (LogId INT PRIMARY KEY IDENTITY (1,1),
      OperationType VARCHAR(64),
-     OperationTable VARCHAR(64))
+     OperationTable VARCHAR(64),
+     Time TIMESTAMP);
 
 CREATE OR ALTER FUNCTION validateArtistNameAndEstablishmentYear(@ArtistName VARCHAR(50), @EstablishmentYear SMALLINT)
 RETURNS INT
@@ -19,6 +21,7 @@ BEGIN
 
     RETURN 1
 END
+GO
 
 
 CREATE OR ALTER FUNCTION validateAlbumParameters(@AlbumName VARCHAR(50), @ReleaseDate DATE)
@@ -32,13 +35,14 @@ BEGIN
 
     RETURN 1
 END
+GO
 
 
 CREATE OR ALTER PROCEDURE addArtist(@ArtistName VARCHAR(50), @EstablishmentYear SMALLINT)
 AS
     IF (dbo.validateArtistNameAndEstablishmentYear(@ArtistName, @EstablishmentYear) <> 1)
     BEGIN
-        INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT VALIDATION ERROR', 'Artist')
+        INSERT INTO LogTable (OperationType, OperationTable, Time) VALUES ('INSERT VALIDATION ERROR', 'Artist', CURRENT_TIMESTAMP())
         RAISERROR ('The artist name and establishment year cannot be null.', 6, 1)
         RETURN
     END
@@ -86,7 +90,7 @@ AS
     END
 
     INSERT INTO Artists_Albums (ArtistId, AlbumId) VALUES (@ArtistId, @AlbumId)
-    INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT', 'Albums_Artists')
+    INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT', 'Artists_Albums')
 GO
 
 CREATE OR ALTER PROCEDURE addAssociationInsideATransaction(@ArtistName VARCHAR(50), @AlbumName VARCHAR(50))
@@ -110,7 +114,7 @@ GO
 
 CREATE OR ALTER PROCEDURE successfulScenario
 AS
-    EXEC addAssociationInsideATransaction 'Pink Floyd', 'The Final Cut'
+    EXEC addAssociationInsideATransaction 'Pink Floyd', 'The Wall'
 GO
 
 /**
@@ -121,5 +125,6 @@ EXEC failedScenario
 EXEC successfulScenario
 SELECT * FROM Artists_Albums;
 SELECT * FROM Album;
-DELETE FROM Album WHERE AlbumId = 25
-DELETE FROM Artists_Albums WHERE AlbumId = 25
+
+
+SELECT * FROM LogTable;

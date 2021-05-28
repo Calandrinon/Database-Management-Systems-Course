@@ -17,6 +17,7 @@ BEGIN
 
     RETURN 1
 END
+GO
 
 
 CREATE OR ALTER FUNCTION validateAlbumParameters(@AlbumName VARCHAR(50), @ReleaseDate DATE)
@@ -30,6 +31,7 @@ BEGIN
 
     RETURN 1
 END
+GO
 
 CREATE OR ALTER PROCEDURE addArtist(@ArtistName VARCHAR(50), @EstablishmentYear SMALLINT)
 AS
@@ -37,13 +39,16 @@ AS
     BEGIN TRY
         IF (dbo.validateArtistNameAndEstablishmentYear(@ArtistName, @EstablishmentYear) <> 1)
         BEGIN
+            INSERT INTO LogTable (OperationType, OperationTable) VALUES ('Failed INSERT caused by null input', 'Artist')
             RAISERROR ('The artist name and establishment year cannot be null.', 6, 1)
         END
         INSERT INTO Artist (Name, EstablishmentYear) VALUES (@ArtistName, @EstablishmentYear)
+        INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT', 'Artist')
         COMMIT TRANSACTION
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION
+        INSERT INTO LogTable (OperationType, OperationTable) VALUES ('ROLLBACK', 'Artist')
         PRINT 'Artist could not be inserted. The transaction has been rolled back.'
     END CATCH
 GO
@@ -54,13 +59,16 @@ AS
     BEGIN TRY
         IF (dbo.validateAlbumParameters(@AlbumName, @ReleaseDate) <> 1)
         BEGIN
+            INSERT INTO LogTable (OperationType, OperationTable) VALUES ('Failed INSERT caused by null input', 'Album')
             RAISERROR ('The album name and release date cannot be null.', 6, 1)
         END
         INSERT INTO Album (Name, ReleaseDate, AlbumArtLink) VALUES (@AlbumName, @ReleaseDate, @AlbumArtLink)
+        INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT', 'Album')
         COMMIT TRANSACTION
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION
+        INSERT INTO LogTable (OperationType, OperationTable) VALUES ('ROLLBACK', 'Album')
         PRINT 'Album could not be inserted. The transaction has been rolled back.'
     END CATCH
 GO
@@ -72,27 +80,32 @@ AS
 
     IF @AlbumId IS NULL
     BEGIN
-        PRINT '@AlbumId is null...'
+        PRINT '@AlbumId is null... Creating an album with the given name...'
         DECLARE @CurrentDate DATE = CAST(GETDATE() as DATE)
         EXEC addAlbum @AlbumName, @CurrentDate, ''
-        PRINT 'Adding the album worked!'
+        PRINT 'Done.'
         SET @AlbumId = (SELECT AlbumId FROM Album WHERE Name = @AlbumName)
+        INSERT INTO LogTable (OperationType, OperationTable) VALUES ('Null id: created the entity', 'Album')
     END
 
     IF @ArtistId IS NULL
     BEGIN
-        PRINT '@ArtistId is null...'
+        PRINT '@ArtistId is null... Creating an artist with the given name...'
         EXEC addArtist @ArtistName, 1900
+        PRINT 'Done.'
         SET @ArtistId = (SELECT ArtistId FROM Artist WHERE Name = @ArtistName)
+        INSERT INTO LogTable (OperationType, OperationTable) VALUES ('Null id: created the entity', 'Artist')
     END
 
     IF (SELECT COUNT(*) FROM Artists_Albums WHERE ArtistId = @ArtistId AND AlbumId = @AlbumId) > 0
     BEGIN
+        INSERT INTO LogTable (OperationType, OperationTable) VALUES ('RAISERROR: association already exists', 'Artists_Albums')
         RAISERROR ('An association between the given artist and album already exists.', 2, 1)
         RETURN
     END
 
     INSERT INTO Artists_Albums (ArtistId, AlbumId) VALUES (@ArtistId, @AlbumId)
+    INSERT INTO LogTable (OperationType, OperationTable) VALUES ('INSERT', 'Artists_Albums')
 GO
 
 
@@ -109,12 +122,12 @@ GO
 
 CREATE OR ALTER PROCEDURE failedScenario
 AS
-    EXEC associationInsertion NULL, 'Relayer'
+    EXEC associationInsertion NULL, 'Test album 2'
 GO
 
 CREATE OR ALTER PROCEDURE successfulScenario
 AS
-    EXEC associationInsertion 'Rush', 'Signals'
+    EXEC associationInsertion 'Rush', 'abcd'
 GO
 
 /**
@@ -123,11 +136,7 @@ GO
 
 SELECT * FROM Artist;
 SELECT * FROM Album;
+SELECT * FROM Artists_Albums;
 EXEC failedScenario
 EXEC successfulScenario
-SELECT * FROM Artists_Albums;
-SELECT * FROM Album;
-DELETE FROM Album WHERE AlbumId = 20
-DELETE FROM Artists_Albums WHERE AlbumId = 20
-
-EXEC addAlbum 'ab', NULL, NULL
+SELECT * FROM LogTable
