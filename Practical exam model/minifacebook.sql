@@ -1,0 +1,46 @@
+
+DROP TABLE Comments;
+DROP TABLE Posts;
+DROP TABLE Likes;
+DROP TABLE Users;
+DROP TABLE Pages;
+DROP TABLE Categories;
+
+CREATE TABLE Users
+	(UId INT PRIMARY KEY,
+	 Name VARCHAR(128),
+	 City VARCHAR(128),
+	 DateOfBirth DATE)
+
+
+CREATE TABLE Categories
+	(CId INT PRIMARY KEY,
+	 Name VARCHAR(64),
+	 DescriptionText VARCHAR(128))
+
+
+CREATE TABLE Pages 
+	(PId INT PRIMARY KEY,
+	 Name VARCHAR(64),
+	 CId INT REFERENCES Categories(CId))
+
+CREATE TABLE Likes 
+	(UId INT,
+	 PId INT,
+	 LikeDate DATE,
+	 CONSTRAINT LikesPK PRIMARY KEY (UId, PId))
+
+
+CREATE TABLE Posts 
+	(PId INT PRIMARY KEY,
+	 PostDate DATE,
+	 PostText VARCHAR(256),
+	 NumberOfShares INT,
+	 UId INT REFERENCES Users(UId))
+
+CREATE TABLE Comments
+	(CId INT PRIMARY KEY,
+	 CommentText VARCHAR(256),
+	 CommentDate DATE,
+	 TopComment BIT,
+	 PId INT REFERENCES Posts(PId))
